@@ -198,30 +198,46 @@ function restoreSession() {
 const AppHeader = {
   template: `
     <header class="app-header sticky top-0 z-40">
-      <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-14">
-        <div class="flex items-center gap-6">
-          <span class="font-bold text-white text-lg cursor-pointer tracking-wide" @click="navigate('/list')">📋 CBC 問題管理</span>
-          <nav class="flex gap-1 text-sm">
-            <a @click.prevent="navigate('/dashboard')" href="#" :class="['px-3 py-1.5 rounded-lg transition font-medium', router.current==='/dashboard' ? 'bg-white/20 text-white' : 'text-blue-100 hover:bg-white/10 hover:text-white']">儀表板</a>
-            <a @click.prevent="navigate('/list')"      href="#" :class="['px-3 py-1.5 rounded-lg transition font-medium', router.current==='/list'      ? 'bg-white/20 text-white' : 'text-blue-100 hover:bg-white/10 hover:text-white']">問題單列表</a>
-            <a @click.prevent="navigate('/new')"       href="#" :class="['px-3 py-1.5 rounded-lg transition font-medium', router.current==='/new'       ? 'bg-white/20 text-white' : 'text-blue-100 hover:bg-white/10 hover:text-white']">新增問題單</a>
-          </nav>
+      <div class="max-w-7xl mx-auto px-4">
+        <!-- 主列 -->
+        <div class="flex items-center justify-between h-14">
+          <div class="flex items-center gap-4">
+            <span class="font-bold text-white text-base cursor-pointer tracking-wide" @click="navTo('/dashboard')">📋 CBC 問題管理</span>
+            <!-- 桌面導覽 -->
+            <nav class="hidden md:flex gap-1 text-sm">
+              <a @click.prevent="navTo('/dashboard')" href="#" :class="['px-3 py-1.5 rounded-lg transition font-medium', router.current==='/dashboard' ? 'bg-white/20 text-white' : 'text-blue-100 hover:bg-white/10 hover:text-white']">儀表板</a>
+              <a @click.prevent="navTo('/list')"      href="#" :class="['px-3 py-1.5 rounded-lg transition font-medium', router.current==='/list'      ? 'bg-white/20 text-white' : 'text-blue-100 hover:bg-white/10 hover:text-white']">問題單列表</a>
+              <a @click.prevent="navTo('/new')"       href="#" :class="['px-3 py-1.5 rounded-lg transition font-medium', router.current==='/new'       ? 'bg-white/20 text-white' : 'text-blue-100 hover:bg-white/10 hover:text-white']">新增問題單</a>
+            </nav>
+          </div>
+          <div class="flex items-center gap-2 text-sm">
+            <span class="hidden sm:inline text-blue-100 text-xs">{{ store.user?.name }}</span>
+            <span v-if="store.user?.role === 'admin'" class="hidden sm:inline px-2 py-0.5 bg-yellow-400 text-yellow-900 rounded-full text-xs font-bold">管理員</span>
+            <button @click="logout" class="px-2 py-1.5 bg-white/10 hover:bg-white/20 text-white rounded-lg transition text-xs font-medium">登出</button>
+            <!-- 漢堡按鈕 -->
+            <button @click="menuOpen = !menuOpen" class="md:hidden p-2 text-white hover:bg-white/10 rounded-lg transition" aria-label="選單">
+              <svg v-if="!menuOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+              <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
         </div>
-        <div class="flex items-center gap-3 text-sm">
-          <span class="text-blue-100">{{ store.user?.name }}</span>
-          <span v-if="store.user?.role === 'admin'" class="px-2 py-0.5 bg-yellow-400 text-yellow-900 rounded-full text-xs font-bold">管理員</span>
-          <button @click="logout" class="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white rounded-lg transition text-xs font-medium">登出</button>
+        <!-- 手機展開選單 -->
+        <div v-show="menuOpen" class="md:hidden pb-3 border-t border-white/20 mt-1 pt-2 flex flex-col gap-1">
+          <a @click.prevent="navTo('/dashboard')" href="#" :class="['block px-3 py-2 rounded-lg text-sm font-medium transition', router.current==='/dashboard' ? 'bg-white/20 text-white' : 'text-blue-100 hover:bg-white/10']">📊 儀表板</a>
+          <a @click.prevent="navTo('/list')"      href="#" :class="['block px-3 py-2 rounded-lg text-sm font-medium transition', router.current==='/list'      ? 'bg-white/20 text-white' : 'text-blue-100 hover:bg-white/10']">📋 問題單列表</a>
+          <a @click.prevent="navTo('/new')"       href="#" :class="['block px-3 py-2 rounded-lg text-sm font-medium transition', router.current==='/new'       ? 'bg-white/20 text-white' : 'text-blue-100 hover:bg-white/10']">＋ 新增問題單</a>
+          <div class="pt-2 border-t border-white/20 text-xs text-blue-200 px-3">{{ store.user?.name }} <span v-if="store.user?.role === 'admin'" class="ml-1 bg-yellow-400 text-yellow-900 rounded px-1 font-bold">管理員</span></div>
         </div>
       </div>
     </header>
   `,
   setup() {
-    const navClass = (path) => ({
-      'text-blue-600 font-semibold': router.current === path,
-      'text-gray-500 hover:text-blue-600': router.current !== path,
-      'cursor-pointer transition': true
-    });
-    return { store, router, navigate, logout, navClass };
+    const menuOpen = ref(false);
+    function navTo(path) {
+      navigate(path);
+      menuOpen.value = false;
+    }
+    return { store, router, menuOpen, navTo, logout };
   }
 };
 
@@ -338,15 +354,39 @@ const IssueListView = {
         <div class="flex justify-between items-center mb-3">
           <div class="text-sm text-gray-500">共 {{ issues.length }} 筆</div>
           <div class="flex gap-2">
-            <button @click="navigate('/new')" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 flex items-center gap-1">
-              <span>＋</span> 新增問題單
+            <button @click="navigate('/new')" class="px-3 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 flex items-center gap-1">
+              <span>＋</span> <span class="hidden sm:inline">新增問題單</span><span class="sm:hidden">新增</span>
             </button>
-            <button @click="exportExcel" class="px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700">📊 匯出 Excel</button>
+            <button @click="exportExcel" class="px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700">📊 <span class="hidden sm:inline">匯出 Excel</span></button>
           </div>
         </div>
 
-        <!-- 表格 -->
-        <div class="bg-white rounded-xl shadow-sm overflow-x-auto">
+        <!-- 手機卡片列表 -->
+        <div class="md:hidden space-y-3">
+          <div v-if="loading" class="p-10 text-center text-gray-400">載入中...</div>
+          <div v-else-if="issues.length === 0" class="p-10 text-center text-gray-400">無符合條件的問題單</div>
+          <div v-else v-for="issue in issues" :key="issue.number"
+               :class="['bg-white rounded-xl shadow-sm p-4 cursor-pointer active:bg-blue-50 transition', issue.status === '已刪除' ? 'opacity-60' : '']"
+               @click="navigate('/detail/' + issue.number)">
+            <div class="flex items-start justify-between gap-2 mb-2">
+              <span class="text-blue-600 font-bold text-sm">#{{ issue.number }}</span>
+              <div class="flex gap-1 flex-wrap justify-end">
+                <span :class="['px-2 py-0.5 rounded-full text-xs font-medium', statusColor(issue.status)]">{{ issue.status }}</span>
+                <span :class="['px-2 py-0.5 rounded-full text-xs font-medium', severityColor(issue.severity)]">{{ issue.severity }}</span>
+              </div>
+            </div>
+            <div class="text-sm text-gray-700 font-medium mb-1 truncate">{{ issue.feature || '（未填功能）' }}</div>
+            <div class="text-xs text-gray-500 truncate mb-2">{{ issue.desc }}</div>
+            <div class="flex items-center gap-3 text-xs text-gray-400">
+              <span>{{ issue.date }}</span>
+              <span>{{ issue.reporter }}</span>
+              <span v-if="issue.type">{{ issue.type }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 桌面表格 -->
+        <div class="hidden md:block bg-white rounded-xl shadow-sm overflow-x-auto">
           <div v-if="loading" class="p-10 text-center text-gray-400">載入中...</div>
           <div v-else-if="issues.length === 0" class="p-10 text-center text-gray-400">無符合條件的問題單</div>
           <table v-else class="w-full text-sm">
@@ -585,9 +625,9 @@ const IssueFormView = {
           </div>
 
           <!-- 送出 -->
-          <div class="flex gap-3 justify-end">
-            <button type="button" @click="navigate('/list')" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">取消</button>
-            <button type="submit" :disabled="submitting" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">
+          <div class="flex flex-col sm:flex-row gap-3 sm:justify-end">
+            <button type="button" @click="navigate('/list')" class="w-full sm:w-auto px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">取消</button>
+            <button type="submit" :disabled="submitting" class="w-full sm:w-auto px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">
               {{ submitting ? '儲存中...' : (isEdit ? '儲存變更' : '新增問題單') }}
             </button>
           </div>
@@ -721,13 +761,13 @@ const IssueDetailView = {
     <div>
       <app-header />
       <div class="max-w-4xl mx-auto px-4 py-6">
-        <div class="flex items-center justify-between mb-6">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
           <div class="flex items-center gap-3">
             <button @click="navigate('/list')" class="text-gray-400 hover:text-gray-600">← 返回列表</button>
             <h1 class="text-xl font-bold text-gray-800">問題單 {{ issue?.number }}</h1>
             <span v-if="issue" :class="['px-2 py-0.5 rounded-full text-xs font-medium', statusColor(issue.status)]">{{ issue.status }}</span>
           </div>
-          <div class="flex gap-2">
+          <div class="flex gap-2 flex-wrap">
             <button v-if="canEdit" @click="navigate('/edit/' + issue.number)" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700">✏️ 編輯</button>
             <button v-if="canDelete && issue?.status !== '已刪除'" @click="confirmDelete" class="px-4 py-2 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700">🗑 刪除</button>
             <button v-if="isAdmin && issue?.status === '已刪除'" @click="doRestore" class="px-4 py-2 bg-gray-600 text-white rounded-lg text-sm hover:bg-gray-700">↩ 還原</button>
@@ -740,13 +780,13 @@ const IssueDetailView = {
           <!-- 提出階段 -->
           <div class="bg-white rounded-xl shadow-sm p-6 mb-4">
             <h2 class="text-base font-semibold text-blue-700 mb-4 border-b pb-2">📝 提出階段</h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
               <div><div class="label">提出日期</div><div>{{ issue.date }}</div></div>
               <div><div class="label">提出人員</div><div>{{ issue.reporter }}</div></div>
               <div><div class="label">測試案例編號</div><div>{{ issue.testCase || '—' }}</div></div>
-              <div class="col-span-2"><div class="label">測試功能項目</div><div>{{ issue.feature || '—' }}</div></div>
+              <div class="sm:col-span-2"><div class="label">測試功能項目</div><div>{{ issue.feature || '—' }}</div></div>
               <div><div class="label">問題嚴重度</div><span :class="['px-2 py-0.5 rounded-full text-xs font-medium', severityColor(issue.severity)]">{{ issue.severity }}</span></div>
-              <div class="col-span-2 md:col-span-3"><div class="label">問題描述</div><div class="whitespace-pre-wrap bg-gray-50 p-3 rounded">{{ issue.desc }}</div></div>
+              <div class="sm:col-span-2 md:col-span-3"><div class="label">問題描述</div><div class="whitespace-pre-wrap bg-gray-50 p-3 rounded">{{ issue.desc }}</div></div>
               <div><div class="label">備註</div><div>{{ issue.remark || '—' }}</div></div>
             </div>
             <!-- 附件 -->
@@ -769,19 +809,18 @@ const IssueDetailView = {
           <!-- 處理階段 -->
           <div class="bg-white rounded-xl shadow-sm p-6 mb-4">
             <h2 class="text-base font-semibold text-orange-600 mb-4 border-b pb-2">🔧 處理階段</h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
               <div><div class="label">處理人員</div><div>{{ issue.handler || '—' }}</div></div>
               <div><div class="label">問題類型</div><div>{{ issue.type || '—' }}</div></div>
               <div><div class="label">處理完成日期</div><div>{{ issue.resolveDate || '—' }}</div></div>
-              <div class="col-span-2 md:col-span-3"><div class="label">問題原因及處理方式</div><div class="whitespace-pre-wrap bg-gray-50 p-3 rounded">{{ issue.solution || '（尚未填寫）' }}</div></div>
+              <div class="sm:col-span-2 md:col-span-3"><div class="label">問題原因及處理方式</div><div class="whitespace-pre-wrap bg-gray-50 p-3 rounded">{{ issue.solution || '（尚未填寫）' }}</div></div>
             </div>
           </div>
 
           <!-- 覆測階段 -->
           <div class="bg-white rounded-xl shadow-sm p-6">
             <h2 class="text-base font-semibold text-green-600 mb-4 border-b pb-2">✅ 覆測階段</h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-              <div><div class="label">測試人員</div><div>{{ issue.tester || '—' }}</div></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
               <div><div class="label">測試日期</div><div>{{ issue.testDate || '—' }}</div></div>
               <div><div class="label">測試結果</div>
                 <span v-if="issue.testResult" :class="['px-2 py-0.5 rounded text-xs font-medium', issue.testResult === 'OK' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700']">{{ issue.testResult }}</span>
