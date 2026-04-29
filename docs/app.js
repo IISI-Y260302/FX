@@ -115,15 +115,27 @@ function navigate(path) {
 
 // ── 6. Google OAuth ───────────────────────────────────────────
 function initGoogleAuth() {
-  if (!window.google || !CONFIG.GOOGLE_CLIENT_ID || CONFIG.GOOGLE_CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID') return;
-  google.accounts.id.initialize({
-    client_id: CONFIG.GOOGLE_CLIENT_ID,
-    callback:  handleGoogleSignIn,
-    auto_select: false
-  });
-  const btn = document.getElementById('google-signin-btn');
-  if (btn) {
-    google.accounts.id.renderButton(btn, { theme: 'outline', size: 'large', locale: 'zh-TW' });
+  if (!CONFIG.GOOGLE_CLIENT_ID || CONFIG.GOOGLE_CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID') return;
+
+  function render() {
+    if (!window.google) return; // SDK 尚未就緒，等 onGoogleLibraryLoad 觸發
+    google.accounts.id.initialize({
+      client_id: CONFIG.GOOGLE_CLIENT_ID,
+      callback:  handleGoogleSignIn,
+      auto_select: false
+    });
+    const btn = document.getElementById('google-signin-btn');
+    if (btn) {
+      google.accounts.id.renderButton(btn, { theme: 'outline', size: 'large', locale: 'zh-TW' });
+    }
+  }
+
+  if (window.google) {
+    // SDK 已載入（refresh 後快取命中）
+    render();
+  } else {
+    // SDK 尚未載入：設定 GSI 標準 callback，SDK 載完後自動觸發
+    window.onGoogleLibraryLoad = render;
   }
 }
 
