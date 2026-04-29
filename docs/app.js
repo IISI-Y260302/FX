@@ -149,7 +149,7 @@ async function loadOptionsAndNavigate() {
       store.user = { name: res.currentUser.name, email: res.currentUser.email || store.user.email, role: res.currentUser.role };
       sessionStorage.setItem('cbc_user', JSON.stringify(store.user));
     }
-    navigate('/list');
+    navigate('/dashboard');
   } catch (e) {
     store.token = null;
     store.user  = null;
@@ -202,9 +202,9 @@ const AppHeader = {
         <div class="flex items-center gap-6">
           <span class="font-bold text-white text-lg cursor-pointer tracking-wide" @click="navigate('/list')">📋 CBC 問題管理</span>
           <nav class="flex gap-1 text-sm">
+            <a @click.prevent="navigate('/dashboard')" href="#" :class="['px-3 py-1.5 rounded-lg transition font-medium', router.current==='/dashboard' ? 'bg-white/20 text-white' : 'text-blue-100 hover:bg-white/10 hover:text-white']">儀表板</a>
             <a @click.prevent="navigate('/list')"      href="#" :class="['px-3 py-1.5 rounded-lg transition font-medium', router.current==='/list'      ? 'bg-white/20 text-white' : 'text-blue-100 hover:bg-white/10 hover:text-white']">問題單列表</a>
             <a @click.prevent="navigate('/new')"       href="#" :class="['px-3 py-1.5 rounded-lg transition font-medium', router.current==='/new'       ? 'bg-white/20 text-white' : 'text-blue-100 hover:bg-white/10 hover:text-white']">新增問題單</a>
-            <a @click.prevent="navigate('/dashboard')" href="#" :class="['px-3 py-1.5 rounded-lg transition font-medium', router.current==='/dashboard' ? 'bg-white/20 text-white' : 'text-blue-100 hover:bg-white/10 hover:text-white']">儀表板</a>
           </nav>
         </div>
         <div class="flex items-center gap-3 text-sm">
