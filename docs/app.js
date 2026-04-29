@@ -196,20 +196,20 @@ function restoreSession() {
 // ──── 7.1 AppHeader ────
 const AppHeader = {
   template: `
-    <header class="bg-white shadow-sm sticky top-0 z-40">
+    <header class="app-header sticky top-0 z-40">
       <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-14">
         <div class="flex items-center gap-6">
-          <span class="font-bold text-blue-700 text-lg cursor-pointer" @click="navigate('/list')">CBC 問題管理</span>
-          <nav class="flex gap-4 text-sm">
-            <a @click.prevent="navigate('/list')"      href="#" :class="navClass('/list')">問題單列表</a>
-            <a @click.prevent="navigate('/new')"       href="#" :class="navClass('/new')">新增問題單</a>
-            <a @click.prevent="navigate('/dashboard')" href="#" :class="navClass('/dashboard')">儀表板</a>
+          <span class="font-bold text-white text-lg cursor-pointer tracking-wide" @click="navigate('/list')">📋 CBC 問題管理</span>
+          <nav class="flex gap-1 text-sm">
+            <a @click.prevent="navigate('/list')"      href="#" :class="['px-3 py-1.5 rounded-lg transition font-medium', router.current==='/list'      ? 'bg-white/20 text-white' : 'text-blue-100 hover:bg-white/10 hover:text-white']">問題單列表</a>
+            <a @click.prevent="navigate('/new')"       href="#" :class="['px-3 py-1.5 rounded-lg transition font-medium', router.current==='/new'       ? 'bg-white/20 text-white' : 'text-blue-100 hover:bg-white/10 hover:text-white']">新增問題單</a>
+            <a @click.prevent="navigate('/dashboard')" href="#" :class="['px-3 py-1.5 rounded-lg transition font-medium', router.current==='/dashboard' ? 'bg-white/20 text-white' : 'text-blue-100 hover:bg-white/10 hover:text-white']">儀表板</a>
           </nav>
         </div>
         <div class="flex items-center gap-3 text-sm">
-          <span class="text-gray-600">{{ store.user?.name }}</span>
-          <span v-if="store.user?.role === 'admin'" class="px-2 py-0.5 bg-purple-100 text-purple-700 rounded text-xs">管理員</span>
-          <button @click="logout" class="text-gray-500 hover:text-red-600 transition">登出</button>
+          <span class="text-blue-100">{{ store.user?.name }}</span>
+          <span v-if="store.user?.role === 'admin'" class="px-2 py-0.5 bg-yellow-400 text-yellow-900 rounded-full text-xs font-bold">管理員</span>
+          <button @click="logout" class="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white rounded-lg transition text-xs font-medium">登出</button>
         </div>
       </div>
     </header>
@@ -453,7 +453,7 @@ const IssueFormView = {
               </div>
               <div class="md:col-span-2">
                 <label class="label">問題描述 <span class="text-red-500">*</span></label>
-                <textarea v-model="form.desc" :readonly="!canEditReporter" rows="3" :class="['input resize-none', !canEditReporter && 'bg-gray-50']" required placeholder="詳細描述問題現象..."></textarea>
+                <textarea v-model="form.desc" :readonly="!canEditReporter" rows="6" :class="['input resize-y', !canEditReporter && 'bg-gray-50']" required placeholder="詳細描述問題現象、重現步驟、預期結果與實際結果..."></textarea>
               </div>
               <div>
                 <label class="label">問題嚴重度 <span class="text-red-500">*</span></label>
@@ -507,7 +507,7 @@ const IssueFormView = {
               </div>
               <div class="md:col-span-2">
                 <label class="label">問題原因及處理方式</label>
-                <textarea v-model="form.solution" rows="3" class="input resize-none" placeholder="描述問題原因及處理方式..."></textarea>
+                <textarea v-model="form.solution" rows="5" class="input resize-y" placeholder="描述問題原因及處理方式..."></textarea>
               </div>
               <div>
                 <label class="label">處理完成日期</label>

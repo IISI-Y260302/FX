@@ -26,18 +26,67 @@
 
   <style>
     [v-cloak] { display: none; }
-    .severity-tag[data-sev="系統崩潰(嚴重)"]  { background-color: #fee2e2; color: #991b1b; }
-    .severity-tag[data-sev="功能無法運作(高)"] { background-color: #ffedd5; color: #9a3412; }
-    .severity-tag[data-sev="一般錯誤(中)"]    { background-color: #fef9c3; color: #854d0e; }
-    .severity-tag[data-sev="建議修正(低)"]    { background-color: #dcfce7; color: #166534; }
-    .status-Open    { background-color: #dbeafe; color: #1e40af; padding: 2px 8px; border-radius: 4px; }
-    .status-Closed  { background-color: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 4px; }
-    .status-Reopen  { background-color: #ffedd5; color: #9a3412; padding: 2px 8px; border-radius: 4px; }
-    .status-deleted { background-color: #e5e7eb; color: #6b7280; padding: 2px 8px; border-radius: 4px; }
+
+    /* ── 全域字型 ── */
+    body { font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif; }
+
+    /* ── 嚴重度標籤 ── */
+    .sev-tag { display:inline-block; padding:2px 10px; border-radius:9999px; font-size:0.75rem; font-weight:600; }
+    .sev-1 { background:#fee2e2; color:#991b1b; }
+    .sev-2 { background:#ffedd5; color:#9a3412; }
+    .sev-3 { background:#fef9c3; color:#854d0e; }
+    .sev-4 { background:#dcfce7; color:#166534; }
+
+    /* ── 狀態標籤 ── */
+    .status-Open    { background:#dbeafe; color:#1e40af; padding:2px 10px; border-radius:9999px; font-size:.75rem; font-weight:600; }
+    .status-Closed  { background:#dcfce7; color:#166534; padding:2px 10px; border-radius:9999px; font-size:.75rem; font-weight:600; }
+    .status-Reopen  { background:#ffedd5; color:#9a3412; padding:2px 10px; border-radius:9999px; font-size:.75rem; font-weight:600; }
+    .status-deleted { background:#e5e7eb; color:#6b7280; padding:2px 10px; border-radius:9999px; font-size:.75rem; font-weight:600; }
+
+    /* ── 表單輸入框共用 ── */
+    .input {
+      width:100%; border:1px solid #d1d5db; border-radius:8px;
+      padding:8px 12px; font-size:.9rem; transition:border-color .2s, box-shadow .2s;
+      background:#fff; color:#111827;
+    }
+    .input:focus { outline:none; border-color:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,.15); }
+    .input:read-only, .input:disabled { background:#f9fafb; color:#6b7280; cursor:not-allowed; }
+    .label { display:block; font-size:.8rem; font-weight:600; color:#374151; margin-bottom:4px; }
+
+    /* ── 卡片區塊 ── */
+    .stage-card {
+      background:#fff; border-radius:14px;
+      box-shadow:0 1px 4px rgba(0,0,0,.07), 0 4px 12px rgba(0,0,0,.05);
+      padding:24px; margin-bottom:20px;
+    }
+    .stage-title {
+      font-size:1rem; font-weight:700; padding-bottom:10px;
+      margin-bottom:18px; border-bottom:2px solid #e5e7eb;
+      display:flex; align-items:center; gap:8px;
+    }
+
+    /* ── Header 漸層 ── */
+    .app-header {
+      background:linear-gradient(135deg,#1e40af 0%,#2563eb 100%);
+      box-shadow:0 2px 8px rgba(30,64,175,.3);
+    }
+
+    /* ── 按鈕 ── */
+    .btn-primary { background:#2563eb; color:#fff; border-radius:8px; padding:8px 18px; font-size:.875rem; font-weight:600; transition:background .2s; }
+    .btn-primary:hover { background:#1d4ed8; }
+    .btn-danger  { background:#ef4444; color:#fff; border-radius:8px; padding:8px 18px; font-size:.875rem; font-weight:600; transition:background .2s; }
+    .btn-danger:hover  { background:#dc2626; }
+    .btn-ghost   { background:transparent; border:1px solid #d1d5db; color:#374151; border-radius:8px; padding:8px 18px; font-size:.875rem; font-weight:500; transition:all .2s; }
+    .btn-ghost:hover   { background:#f3f4f6; }
+
+    /* ── 列表表格 ── */
+    .issue-table th { background:#f8fafc; font-size:.78rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:.05em; }
+    .issue-table tr:hover td { background:#f0f7ff; }
+    .issue-table td { border-bottom:1px solid #f3f4f6; }
   </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
   <div id="app" v-cloak></div>
-  <script src="app.js?v=4"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>
