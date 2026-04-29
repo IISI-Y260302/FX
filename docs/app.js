@@ -27,7 +27,9 @@ const api = {
     const qs = new URLSearchParams({ ...params, token: store.token }).toString();
     const res = await fetch(`${CONFIG.GAS_URL}?${qs}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
+    const buf = await res.arrayBuffer();
+    const text = new TextDecoder('utf-8').decode(buf);
+    const data = JSON.parse(text);
     if (!data.success) throw new Error(data.error || 'API error');
     return data;
   },
@@ -40,7 +42,9 @@ const api = {
       body:    JSON.stringify({ ...body, token: store.token })
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
+    const buf = await res.arrayBuffer();
+    const text = new TextDecoder('utf-8').decode(buf);
+    const data = JSON.parse(text);
     if (!data.success) throw new Error(data.error || 'API error');
     return data;
   },
