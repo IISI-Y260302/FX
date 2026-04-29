@@ -639,8 +639,8 @@ const IssueFormView = {
           <!-- 送出 -->
           <div class="flex flex-col sm:flex-row gap-3 sm:justify-end">
             <button type="button" @click="navigate('/list')" class="w-full sm:w-auto px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">取消</button>
-            <button type="submit" :disabled="submitting" class="w-full sm:w-auto px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">
-              {{ submitting ? '儲存中...' : (isEdit ? '儲存變更' : '新增問題單') }}
+            <button type="submit" :disabled="submitting || loading" class="w-full sm:w-auto px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">
+              {{ loading ? '載入中...' : submitting ? '儲存中...' : (isEdit ? '儲存變更' : '新增問題單') }}
             </button>
           </div>
         </form>
@@ -651,6 +651,7 @@ const IssueFormView = {
   setup() {
     const isEdit    = computed(() => !!router.params.id);
     const submitting = ref(false);
+    const loading    = ref(false);
     const uploadingFile = ref(false);
     const attachments = ref([]);   // [{ name, url, viewUrl }]
 
@@ -682,6 +683,7 @@ const IssueFormView = {
         form.date = new Date().toISOString().slice(0, 10);
         return;
       }
+      loading.value = true;
       try {
         // 取得全部列表再用編號比對（keyword 只搜尋描述欄位，不能搜尋編號）
         const res = await api.listIssues({});
@@ -701,6 +703,7 @@ const IssueFormView = {
           showToast('找不到問題單：' + router.params.id, 'error');
         }
       } catch (e) { showToast(e.message, 'error'); }
+      finally { loading.value = false; }
     }
 
     async function handleFileUpload(event) {
@@ -763,7 +766,7 @@ const IssueFormView = {
     }
 
     onMounted(loadIssue);
-    return { isEdit, form, submitting, uploadingFile, attachments, canEditReporter, severityOpts, typeOpts, resultOpts, userOpts, testCaseOpts, onTestCaseChange, handleFileUpload, removeAttachment, submit, store, navigate };
+    return { isEdit, form, submitting, loading, uploadingFile, attachments, canEditReporter, severityOpts, typeOpts, resultOpts, userOpts, testCaseOpts, onTestCaseChange, handleFileUpload, removeAttachment, submit, store, navigate };
   }
 };
 
