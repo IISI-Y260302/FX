@@ -38,7 +38,8 @@ const api = {
     if (!store.token) throw new Error('Not authenticated');
     const res = await fetch(CONFIG.GAS_URL, {
       method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
+      // text/plain 不觸發 CORS preflight，GAS 仍可用 e.postData.contents 取得 JSON
+      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
       body:    JSON.stringify({ ...body, token: store.token })
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
