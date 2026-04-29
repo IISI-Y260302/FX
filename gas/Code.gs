@@ -153,7 +153,7 @@ function getOptions(auth) {
   return {
     success: true,
     data: {
-      severity:  ['嚴重', '功能無法運作', '中', '低', '建議'],
+      severity:  ['系統崩潰(嚴重)', '功能無法運作(高)', '一般錯誤(中)', '建議修正(低)'],
       type:      ['Bug', '操作錯誤', '需求', '資料問題'],
       result:    ['OK', 'NG'],
       status:    ['Open', 'Closed', 'Reopen'],
@@ -169,6 +169,7 @@ function getOptions(auth) {
 
 function listIssues(params, auth) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(MAIN_SHEET_NAME);
+  if (!sheet) return { success: false, error: '找不到工作表：' + MAIN_SHEET_NAME + '，請確認 Google Sheets 中有此分頁名稱' };
   const lastRow = sheet.getLastRow();
   if (lastRow < DATA_START_ROW) return { success: true, data: [] };
 

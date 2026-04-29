@@ -78,7 +78,12 @@ function formatDate(d) {
 }
 
 function severityColor(s) {
-  const map = { '嚴重': 'bg-red-100 text-red-800', '功能無法運作': 'bg-orange-100 text-orange-800', '中': 'bg-yellow-100 text-yellow-800', '低': 'bg-blue-100 text-blue-800', '建議': 'bg-green-100 text-green-800' };
+  const map = {
+    '系統崩潰(嚴重)':   'bg-red-100 text-red-800',
+    '功能無法運作(高)':  'bg-orange-100 text-orange-800',
+    '一般錯誤(中)':      'bg-yellow-100 text-yellow-800',
+    '建議修正(低)':      'bg-green-100 text-green-800'
+  };
   return map[s] || 'bg-gray-100 text-gray-700';
 }
 
@@ -924,10 +929,10 @@ const DashboardView = {
         // 嚴重度長條圖
         const sevCtx = document.getElementById('severityChart');
         if (sevCtx) {
-          const labels = ['嚴重','功能無法運作','中','低','建議'];
+          const labels = ['系統崩潰(嚴重)','功能無法運作(高)','一般錯誤(中)','建議修正(低)'];
           charts.severity = new Chart(sevCtx, {
             type: 'bar',
-            data: { labels, datasets: [{ label: '問題數', data: labels.map(l => data.severityDist[l] || 0), backgroundColor: ['#ef4444','#f97316','#eab308','#3b82f6','#22c55e'] }] },
+            data: { labels, datasets: [{ label: '問題數', data: labels.map(l => data.severityDist[l] || 0), backgroundColor: ['#ef4444','#f97316','#eab308','#22c55e'] }] },
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
           });
         }
