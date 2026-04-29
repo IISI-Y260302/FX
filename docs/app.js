@@ -473,13 +473,15 @@ const IssueFormView = {
             <div class="mt-4">
               <label class="label">附件 (JPG/PNG/GIF，每檔 ≤5MB，最多 5 個)</label>
               <div class="flex flex-wrap gap-3 mt-2">
-                <div v-for="(att, idx) in attachments" :key="idx" class="relative group">
-                  <img :src="att.url" class="w-20 h-20 object-cover rounded border" />
-                  <button type="button" @click="removeAttachment(idx)" class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition">✕</button>
-                  <div class="text-xs text-center text-gray-400 mt-1 w-20 truncate">{{ att.name }}</div>
+                <div v-for="(att, idx) in attachments" :key="idx" class="relative group flex flex-col items-center">
+                  <div class="w-24 h-24 rounded-xl overflow-hidden border-2 border-gray-200 shadow-sm group-hover:shadow-md transition-shadow bg-gray-50">
+                    <img :src="att.url" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" />
+                  </div>
+                  <button type="button" @click="removeAttachment(idx)" class="absolute -top-1 -right-1 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow">✕</button>
+                  <div class="text-xs text-center text-gray-500 mt-1 w-24 truncate">{{ att.name }}</div>
                 </div>
-                <label v-if="attachments.length < 5 && canEditReporter" class="w-20 h-20 border-2 border-dashed border-gray-300 rounded flex flex-col items-center justify-center cursor-pointer hover:border-blue-400 transition text-gray-400">
-                  <span class="text-2xl">＋</span>
+                <label v-if="attachments.length < 5 && canEditReporter" class="w-24 h-24 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition text-gray-400 hover:text-blue-500">
+                  <span class="text-3xl leading-none mb-1">＋</span>
                   <span class="text-xs">上傳附件</span>
                   <input type="file" accept="image/jpeg,image/png,image/gif" class="hidden" @change="handleFileUpload" />
                 </label>
@@ -727,9 +729,14 @@ const IssueDetailView = {
             <div v-if="parsedAttachments.length" class="mt-4">
               <div class="label mb-2">附件</div>
               <div class="flex flex-wrap gap-3">
-                <a v-for="(att, i) in parsedAttachments" :key="i" :href="att.viewUrl" target="_blank" class="group relative">
-                  <img :src="att.url" class="w-24 h-24 object-cover rounded border group-hover:opacity-80 transition" />
-                  <div class="text-xs text-center text-gray-400 mt-1 w-24 truncate">{{ att.name }}</div>
+                <a v-for="(att, i) in parsedAttachments" :key="i" :href="att.viewUrl" target="_blank" class="group relative flex flex-col items-center">
+                  <div class="w-28 h-28 rounded-xl overflow-hidden border-2 border-gray-200 shadow-sm group-hover:shadow-lg transition-shadow bg-gray-50">
+                    <img :src="att.url" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" />
+                  </div>
+                  <div class="absolute inset-0 rounded-xl bg-black bg-opacity-0 group-hover:bg-opacity-20 transition flex items-center justify-center">
+                    <span class="text-white text-2xl opacity-0 group-hover:opacity-100 transition">🔍</span>
+                  </div>
+                  <div class="text-xs text-center text-gray-500 mt-1 w-28 truncate">{{ att.name }}</div>
                 </a>
               </div>
             </div>
