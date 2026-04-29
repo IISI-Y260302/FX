@@ -128,14 +128,10 @@ function initGoogleAuth() {
 
 function handleGoogleSignIn(response) {
   try {
-    // 用 TextDecoder 正確解碼 UTF-8 的 JWT payload（避免中文亂碼）
-    const base64 = response.credential.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-    const binary = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
-    const payload = JSON.parse(new TextDecoder('utf-8').decode(binary));
+    // 暫存 token，姓名等 API 回應後從白名單取得（避免 JWT 中文亂碼）
     store.token = response.credential;
-    store.user  = { name: payload.name, email: payload.email, role: null };
+    store.user  = { name: '', email: '', role: null };
     sessionStorage.setItem('cbc_token', response.credential);
-    sessionStorage.setItem('cbc_user',  JSON.stringify(store.user));
     loadOptionsAndNavigate();
   } catch (e) {
     showToast('登入失敗: ' + e.message, 'error');
@@ -147,9 +143,9 @@ async function loadOptionsAndNavigate() {
     store.loading = true;
     const res = await api.getOptions();
     store.options = res.data;
-    // 從後端白名單取得正確中文姓名與角色
+    // 姓名與角色完全從後端白名單取得，不依賴 JWT payload
     if (res.currentUser) {
-      store.user = { ...store.user, name: res.currentUser.name, role: res.currentUser.role };
+      store.user = { name: res.currentUser.name, email: res.currentUser.email || store.user.email, role: res.currentUser.role };
       sessionStorage.setItem('cbc_user', JSON.stringify(store.user));
     }
     navigate('/list');
