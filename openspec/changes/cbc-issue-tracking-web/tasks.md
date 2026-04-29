@@ -24,10 +24,10 @@
 ## 3. 前端基礎架構
 
 - [x] 3.1 建立前端目錄結構：`index.html`、`app.js`、`style.css`（或使用子目錄）
-- [x] 3.2 引入 CDN 依賴：Vue 3、Tailwind CSS、Chart.js、SheetJS、jsPDF、Google Identity Services SDK
+- [x] 3.2 引入 CDN 依賴：Vue 3、Tailwind CSS、Chart.js、SheetJS、Google Identity Services SDK（已移除 jsPDF）
 - [x] 3.3 實作 Google OAuth 登入頁面：顯示「以 Google 帳號登入」按鈕，登入後儲存 id_token 至 sessionStorage
 - [x] 3.4 實作 API 呼叫封裝模組：所有 fetch 請求自動帶入 Authorization id_token，處理 403/401 回應導回登入頁
-- [x] 3.5 實作路由機制（Vue Router 或 hash 路由）：登入頁 / 列表頁 / 新增頁 / 詳細頁 / 儀表板頁
+- [x] 3.5 實作路由機制（Vue Router 或 hash 路由）：登入頁 / 列表頁 / 新增頁 / 詳細頁 / 儀表板頁（儀表板為預設首頁）
 - [x] 3.6 實作 Header 元件：顯示登入使用者姓名、角色標示、登出按鈕、頁面導覽連結
 
 ## 4. 問題單列表頁
@@ -70,8 +70,8 @@
 ## 8. 匯出功能
 
 - [x] 8.1 實作「匯出 Excel」功能：呼叫 Apps Script 取得完整資料 JSON，用 SheetJS 產生 .xlsx 檔案，欄位順序對應原 Excel
-- [x] 8.2 實作「匯出 PDF」功能（列表）：用 jsPDF 產生包含問題單表格的 PDF
-- [x] 8.3 實作單一問題單「列印/匯出 PDF」：詳細頁的所有欄位輸出為 PDF
+- ~~8.2 實作「匯出 PDF」功能（列表）~~ ❌ 已移除（jsPDF 不支援 CJK 字符）
+- ~~8.3 實作單一問題單「列印/匯出 PDF」~~ ❌ 已移除
 
 ## 9. 測試與部署
 
