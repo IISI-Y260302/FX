@@ -302,7 +302,6 @@ const IssueListView = {
               <span>＋</span> 新增問題單
             </button>
             <button @click="exportExcel" class="px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700">📊 匯出 Excel</button>
-            <button @click="exportPdf"   class="px-3 py-2 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700">📄 匯出 PDF</button>
           </div>
         </div>
 
@@ -390,25 +389,8 @@ const IssueListView = {
       XLSX.writeFile(wb, `CBC系統測試問題紀錄表_${new Date().toISOString().slice(0,10).replace(/-/g,'')}.xlsx`);
     }
 
-    function exportPdf() {
-      if (issues.value.length === 0) { showToast('無資料可匯出', 'error'); return; }
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-      doc.setFont('helvetica');
-      doc.setFontSize(14);
-      doc.text('CBC \u7cfb\u7d71\u6e2c\u8a66\u554f\u984c\u7d00\u9304\u8868', 14, 15);
-      doc.autoTable({
-        startY: 22,
-        head: [['編號','提出日期','提出人員','功能項目','嚴重度','狀態','類型']],
-        body: issues.value.map(i => [i.number, i.date, i.reporter, i.feature, i.severity, i.status, i.type]),
-        styles: { fontSize: 8 },
-        headStyles: { fillColor: [37, 99, 235] }
-      });
-      doc.save(`CBC系統測試問題紀錄表_${new Date().toISOString().slice(0,10).replace(/-/g,'')}.pdf`);
-    }
-
     onMounted(load);
-    return { issues, loading, filters, isAdmin, statusOpts, severityOpts, userOpts, load, resetFilters, navigate, exportExcel, exportPdf, severityColor, statusColor };
+    return { issues, loading, filters, isAdmin, statusOpts, severityOpts, userOpts, load, resetFilters, navigate, exportExcel, severityColor, statusColor };
   }
 };
 
@@ -709,7 +691,6 @@ const IssueDetailView = {
             <button v-if="canEdit" @click="navigate('/edit/' + issue.number)" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700">✏️ 編輯</button>
             <button v-if="canDelete && issue?.status !== '已刪除'" @click="confirmDelete" class="px-4 py-2 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700">🗑 刪除</button>
             <button v-if="isAdmin && issue?.status === '已刪除'" @click="doRestore" class="px-4 py-2 bg-gray-600 text-white rounded-lg text-sm hover:bg-gray-700">↩ 還原</button>
-            <button @click="exportDetailPdf" class="px-4 py-2 bg-orange-600 text-white rounded-lg text-sm hover:bg-orange-700">📄 匯出 PDF</button>
           </div>
         </div>
 
@@ -832,31 +813,8 @@ const IssueDetailView = {
       } catch (e) { showToast(e.message, 'error'); }
     }
 
-    function exportDetailPdf() {
-      if (!issue.value) return;
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ unit: 'mm', format: 'a4' });
-      const i = issue.value;
-      let y = 15;
-      doc.setFontSize(14);
-      doc.text(`\u554f\u984c\u55ae ${i.number}`, 14, y); y += 10;
-      doc.setFontSize(9);
-      const rows = [
-        ['\u63d0\u51fa\u65e5\u671f', i.date, '\u63d0\u51fa\u4eba\u54e1', i.reporter],
-        ['\u6e2c\u8a66\u529f\u80fd\u9805\u76ee', i.feature, '\u554f\u984c\u56b4\u91cd\u5ea6', i.severity],
-        ['\u554f\u984c\u63cf\u8ff0', i.desc, '', ''],
-        ['\u8655\u7406\u4eba\u54e1', i.handler, '\u554f\u984c\u985e\u578b', i.type],
-        ['\u8655\u7406\u65b9\u5f0f', i.solution, '\u8655\u7406\u5b8c\u6210\u65e5\u671f', i.resolveDate],
-        ['\u6e2c\u8a66\u4eba\u54e1', i.tester, '\u6e2c\u8a66\u7d50\u679c', i.testResult],
-        ['\u8986\u6e2c\u4eba\u54e1', i.reviewer, '\u8986\u6e2c\u7d50\u679c', i.reviewResult],
-        ['\u554f\u984c\u72c0\u614b', i.status, '\u5099\u8a3b', i.remark]
-      ];
-      doc.autoTable({ startY: y, body: rows, styles: { fontSize: 8 }, columnStyles: { 0: { fontStyle: 'bold', cellWidth: 35 }, 2: { fontStyle: 'bold', cellWidth: 35 } } });
-      doc.save(`CBC_\u554f\u984c\u55ae_${i.number}.pdf`);
-    }
-
     onMounted(loadIssue);
-    return { issue, loading, isAdmin, canEdit, canDelete, parsedAttachments, showDeleteModal, confirmDelete, doDelete, doRestore, exportDetailPdf, navigate, severityColor, statusColor };
+    return { issue, loading, isAdmin, canEdit, canDelete, parsedAttachments, showDeleteModal, confirmDelete, doDelete, doRestore, navigate, severityColor, statusColor };
   }
 };
 
