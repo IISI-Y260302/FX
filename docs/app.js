@@ -233,11 +233,22 @@ const LoginView = {
         <div class="text-3xl mb-2">📋</div>
         <h1 class="text-2xl font-bold text-gray-800 mb-1">CBC 系統測試問題管理</h1>
         <p class="text-gray-500 text-sm mb-8">中央銀行外匯資料處理系統</p>
-        <div v-if="configMissing" class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded text-yellow-700 text-sm text-left">
-          ⚠️ 請先在 <code>app.js</code> 設定 <code>CONFIG.GAS_URL</code> 與 <code>CONFIG.GOOGLE_CLIENT_ID</code>
+        <div v-if="isWebView" class="mb-4 p-4 bg-orange-50 border border-orange-200 rounded-xl text-left">
+          <p class="text-orange-700 font-semibold text-sm mb-2">⚠️ 請使用瀏覽器開啟</p>
+          <p class="text-orange-600 text-xs mb-3">目前在 App 內建瀏覽器中，Google 登入無法使用。</p>
+          <p class="text-orange-600 text-xs mb-3">請複製以下網址，用 <strong>Chrome</strong> 或 <strong>Safari</strong> 開啟：</p>
+          <div class="bg-white border border-orange-200 rounded px-3 py-2 text-xs text-gray-700 break-all select-all mb-2">{{ currentUrl }}</div>
+          <button @click="copyUrl" class="w-full py-2 bg-orange-500 text-white rounded-lg text-sm hover:bg-orange-600">
+            {{ copied ? '✅ 已複製' : '📋 複製網址' }}
+          </button>
         </div>
-        <div id="google-signin-btn" class="flex justify-center"></div>
-        <p class="mt-4 text-xs text-gray-400">僅限授權人員登入</p>
+        <template v-else>
+          <div v-if="configMissing" class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded text-yellow-700 text-sm text-left">
+            ⚠️ 請先在 <code>app.js</code> 設定 <code>CONFIG.GAS_URL</code> 與 <code>CONFIG.GOOGLE_CLIENT_ID</code>
+          </div>
+          <div id="google-signin-btn" class="flex justify-center"></div>
+          <p class="mt-4 text-xs text-gray-400">僅限授權人員登入</p>
+        </template>
       </div>
     </div>
   `,
@@ -246,10 +257,39 @@ const LoginView = {
       CONFIG.GAS_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL' ||
       CONFIG.GOOGLE_CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID'
     );
+
+    // 偵測 WebView / In-App Browser
+    const ua = navigator.userAgent || '';
+    const isWebView = ref(
+      /FBAN|FBAV|Instagram|Line\/|MicroMessenger|TwitterAndroid|LinkedInApp|GSA\//.test(ua) ||
+      (/Android/.test(ua) && !/Chrome\//.test(ua) && /Version\//.test(ua)) ||
+      (!/Safari/.test(ua) && /AppleWebKit/.test(ua) && /Mobile/.test(ua) && !/Chrome/.test(ua))
+    );
+
+    const currentUrl = ref(location.href);
+    const copied = ref(false);
+
+    function copyUrl() {
+      navigator.clipboard.writeText(currentUrl.value).then(() => {
+        copied.value = true;
+        setTimeout(() => { copied.value = false; }, 2000);
+      }).catch(() => {
+        // fallback
+        const el = document.createElement('textarea');
+        el.value = currentUrl.value;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        copied.value = true;
+        setTimeout(() => { copied.value = false; }, 2000);
+      });
+    }
+
     onMounted(() => {
-      nextTick(() => initGoogleAuth());
+      if (!isWebView.value) nextTick(() => initGoogleAuth());
     });
-    return { configMissing };
+    return { configMissing, isWebView, currentUrl, copied, copyUrl };
   }
 };
 
