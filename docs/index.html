@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CBC 系統測試問題管理系統</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Vue 3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <!-- SheetJS (Excel 匯出) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <!-- jsPDF + AutoTable (PDF 匯出) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.6.0/jspdf.plugin.autotable.min.js"></script>
+
+  <!-- Google Identity Services (OAuth) -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <style>
+    [v-cloak] { display: none; }
+    .severity-嚴重        { @apply bg-red-100    text-red-800; }
+    .severity-功能無法運作 { @apply bg-orange-100 text-orange-800; }
+    .severity-中          { @apply bg-yellow-100 text-yellow-800; }
+    .severity-低          { @apply bg-blue-100   text-blue-800; }
+    .severity-建議        { @apply bg-green-100  text-green-800; }
+    .status-Open    { @apply bg-blue-100   text-blue-800; }
+    .status-Closed  { @apply bg-green-100  text-green-800; }
+    .status-Reopen  { @apply bg-orange-100 text-orange-800; }
+    .status-deleted { @apply bg-gray-200   text-gray-500; }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen" v-cloak>
+  <div id="app"></div>
+  <script src="app.js"></script>
+</body>
+</html>
