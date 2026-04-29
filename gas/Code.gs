@@ -8,7 +8,7 @@
 const MAIN_SHEET_NAME    = '系統測試問題紀錄表';
 const TESTCASE_SHEET_NAME = '測試案例編號及功能項目';
 const USERS_SHEET_NAME   = '使用者白名單';
-const DATA_START_ROW     = 6; // 前 5 列為標題/說明，資料從第 6 列開始
+const DATA_START_ROW     = 2; // 第 1 列為欄位標題，資料從第 2 列開始
 
 // 欄位索引 (1-based)
 const COL = {
@@ -399,19 +399,11 @@ function uploadFile(body, auth) {
     const existing = parent.getFoldersByName(subName);
     subFolder = existing.hasNext() ? existing.next() : parent.createFolder(subName);
 
-    // 解碼 base64 並建立檔案
-    const base64 = body.fileData.replace(/^data:[^;]+;base64,/, '');
+    // 解碼 base64（不指定 mimeType 避免 GAS 驗證問題）
+    const fileDataStr = body.fileData || '';
+    const base64 = fileDataStr.replace(/^data:[^;]+;base64,/, '');
     const decoded = Utilities.base64Decode(base64);
-
-    // 將 MIME type 字串對應到 GAS MimeType 常數
-    const mimeMap = {
-      'image/jpeg': MimeType.JPEG,
-      'image/jpg':  MimeType.JPEG,
-      'image/png':  MimeType.PNG,
-      'image/gif':  MimeType.GIF
-    };
-    const mimeType = mimeMap[body.mimeType] || MimeType.PNG;
-    const blob = Utilities.newBlob(decoded, mimeType, body.fileName);
+    const blob = Utilities.newBlob(decoded).setName(body.fileName || 'upload.jpg');
     const file = subFolder.createFile(blob);
     file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
 
@@ -496,4 +488,36 @@ function findRowByNumber(sheet, number) {
     if (nums[i][0].toString() === number.toString()) return DATA_START_ROW + i;
   }
   return null;
+}
+
+// ─────────────────────────────────────────────────────────────
+// 診斷測試（在 Apps Script 編輯器選此函式後按▶執行）
+// ─────────────────────────────────────────────────────────────
+
+function testUpload() {
+  try {
+    Logger.log('Step 1: 取得 DRIVE_FOLDER_ID');
+    const folderId = PropertiesService.getScriptProperties().getProperty('DRIVE_FOLDER_ID');
+    Logger.log('DRIVE_FOLDER_ID = ' + folderId);
+    if (!folderId) { Logger.log('ERROR: DRIVE_FOLDER_ID 未設定'); return; }
+
+    Logger.log('Step 2: 取得資料夾');
+    const parent = DriveApp.getFolderById(folderId);
+    Logger.log('資料夾名稱: ' + parent.getName());
+
+    Logger.log('Step 3: 建立子資料夾');
+    const existing = parent.getFoldersByName('診斷測試');
+    const subFolder = existing.hasNext() ? existing.next() : parent.createFolder('診斷測試');
+    Logger.log('子資料夾 OK');
+
+    Logger.log('Step 4: 建立 Blob');
+    const blob = Utilities.newBlob('Hello').setName('test.txt');
+    Logger.log('Blob OK');
+
+    Logger.log('Step 5: 建立檔案');
+    const file = subFolder.createFile(blob);
+    Logger.log('成功！檔案 ID: ' + file.getId());
+  } catch(e) {
+    Logger.log('錯誤: ' + e.toString());
+  }
 }
