@@ -1,10 +1,10 @@
 ## 1. 前置準備
 
-- [ ] 1.1 建立 GitHub Repository，設定 GitHub Pages（從 main branch /docs 或獨立 gh-pages branch）
-- [ ] 1.2 建立 Google Sheets 工作簿：複製現有問題紀錄表結構，新增「使用者白名單」分頁（欄位：Email、姓名、角色）
-- [ ] 1.3 建立 Google Drive 資料夾 `/CBC問題單附件/`，記錄資料夾 ID
-- [ ] 1.4 建立 Google Apps Script 專案，連結至上述 Google Sheets
-- [ ] 1.5 在 Google Cloud Console 建立 OAuth 2.0 用戶端 ID（Web application），設定授權來源為 GitHub Pages 網址
+- [x] 1.1 建立 GitHub Repository，設定 GitHub Pages（從 main branch /docs 或獨立 gh-pages branch）
+- [x] 1.2 建立 Google Sheets 工作簿：複製現有問題紀錄表結構，新增「使用者白名單」分頁（欄位：Email、姓名、角色）
+- [x] 1.3 建立 Google Drive 資料夾 `/CBC問題單附件/`，記錄資料夾 ID
+- [x] 1.4 建立 Google Apps Script 專案，連結至上述 Google Sheets
+- [x] 1.5 在 Google Cloud Console 建立 OAuth 2.0 用戶端 ID（Web application），設定授權來源為 GitHub Pages 網址
 
 ## 2. Google Apps Script 後端 API
 
@@ -19,7 +19,7 @@
 - [x] 2.9 實作 `action=restore` API（管理員限定）：將已刪除問題單狀態還原為「Open」
 - [x] 2.10 實作 `action=uploadFile` API：接收 base64 圖片，上傳至 Google Drive 對應資料夾，回傳分享連結
 - [x] 2.11 實作 `action=stats` API：計算各統計維度數據（狀態分布、嚴重度分布、類型分布、近30日趨勢）
-- [ ] 2.12 部署 Apps Script 為 Web App（執行身分：我、存取對象：所有人），記錄 Web App URL
+- [x] 2.12 部署 Apps Script 為 Web App（執行身分：我、存取對象：所有人），記錄 Web App URL
 
 ## 3. 前端基礎架構
 
@@ -75,10 +75,10 @@
 
 ## 9. 測試與部署
 
-- [ ] 9.1 測試 Google OAuth 登入流程（白名單內/外帳號）
-- [ ] 9.2 測試問題單 CRUD 操作（新增、編輯、刪除、還原）
-- [ ] 9.3 測試角色權限控制（一般使用者 vs 管理員）
-- [ ] 9.4 測試圖片附件上傳（正常上傳、格式錯誤、超過大小）
-- [ ] 9.5 測試 Excel 與 PDF 匯出正確性
-- [ ] 9.6 確認 GitHub Pages 部署正常，HTTPS 連線無誤
+- [x] 9.1 測試 Google OAuth 登入流程（白名單內/外帳號）
+- [x] 9.2 測試問題單 CRUD 操作（新增、編輯、刪除、還原）
+- [x] 9.3 測試角色權限控制（一般使用者 vs 管理員）
+- [x] 9.4 測試圖片附件上傳（正常上傳、格式錯誤、超過大小）
+- [x] 9.5 測試 Excel 與 PDF 匯出正確性
+- [x] 9.6 確認 GitHub Pages 部署正常，HTTPS 連線無誤
 - [x] 9.7 更新 README：記錄系統架構、部署步驟、Google Apps Script 設定說明
