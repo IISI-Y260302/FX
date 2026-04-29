@@ -128,7 +128,10 @@ function initGoogleAuth() {
 
 function handleGoogleSignIn(response) {
   try {
-    const payload = JSON.parse(atob(response.credential.split('.')[1]));
+    // 用 TextDecoder 正確解碼 UTF-8 的 JWT payload（避免中文亂碼）
+    const base64 = response.credential.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const binary = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+    const payload = JSON.parse(new TextDecoder('utf-8').decode(binary));
     store.token = response.credential;
     store.user  = { name: payload.name, email: payload.email, role: null };
     sessionStorage.setItem('cbc_token', response.credential);
@@ -144,8 +147,11 @@ async function loadOptionsAndNavigate() {
     store.loading = true;
     const res = await api.getOptions();
     store.options = res.data;
-    // 從 options 取得完整 user 資訊（含 role）— 用驗證時回傳的 role
-    // 第一次 call 成功即代表在白名單內
+    // 從後端白名單取得正確中文姓名與角色
+    if (res.currentUser) {
+      store.user = { ...store.user, name: res.currentUser.name, role: res.currentUser.role };
+      sessionStorage.setItem('cbc_user', JSON.stringify(store.user));
+    }
     navigate('/list');
   } catch (e) {
     store.token = null;

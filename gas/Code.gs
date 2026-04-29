@@ -152,6 +152,7 @@ function getOptions(auth) {
 
   return {
     success: true,
+    currentUser: { name: auth.name, role: auth.role },
     data: {
       severity:  ['系統崩潰(嚴重)', '功能無法運作(高)', '一般錯誤(中)', '建議修正(低)'],
       type:      ['Bug', '操作錯誤', '需求', '資料問題'],
