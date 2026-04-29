@@ -401,8 +401,18 @@ function uploadFile(body, auth) {
 
     // 解碼 base64 並建立檔案
     const base64 = body.fileData.replace(/^data:[^;]+;base64,/, '');
-    const blob   = Utilities.newBlob(Utilities.base64Decode(base64), body.mimeType, body.fileName);
-    const file   = subFolder.createFile(blob);
+    const decoded = Utilities.base64Decode(base64);
+
+    // 將 MIME type 字串對應到 GAS MimeType 常數
+    const mimeMap = {
+      'image/jpeg': MimeType.JPEG,
+      'image/jpg':  MimeType.JPEG,
+      'image/png':  MimeType.PNG,
+      'image/gif':  MimeType.GIF
+    };
+    const mimeType = mimeMap[body.mimeType] || MimeType.PNG;
+    const blob = Utilities.newBlob(decoded, mimeType, body.fileName);
+    const file = subFolder.createFile(blob);
     file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
 
     return {
