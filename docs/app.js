@@ -593,9 +593,9 @@ const IssueFormView = {
             </div>
           </div>
 
-          <!-- 覆測階段 -->
+          <!-- 測試階段 -->
           <div class="bg-white rounded-xl shadow-sm p-6">
-            <h2 class="text-base font-semibold text-green-600 mb-4 border-b pb-2">✅ 覆測階段</h2>
+            <h2 class="text-base font-semibold text-green-600 mb-4 border-b pb-2">✅ 測試階段</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label class="label">測試人員</label>
@@ -615,12 +615,16 @@ const IssueFormView = {
                   <option v-for="r in resultOpts" :key="r">{{ r }}</option>
                 </select>
               </div>
+            </div>
+          </div>
+
+          <!-- 業務單位覆測階段 -->
+          <div class="bg-white rounded-xl shadow-sm p-6">
+            <h2 class="text-base font-semibold text-purple-600 mb-4 border-b pb-2">📋 業務單位覆測階段</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label class="label">業務單位覆測人員</label>
-                <select v-model="form.reviewer" class="input">
-                  <option value="">請選擇</option>
-                  <option v-for="u in userOpts" :key="u">{{ u }}</option>
-                </select>
+                <input v-model="form.reviewer" type="text" class="input" placeholder="請輸入覆測人員姓名" />
               </div>
               <div>
                 <label class="label">覆測日期</label>
@@ -832,15 +836,23 @@ const IssueDetailView = {
             </div>
           </div>
 
-          <!-- 覆測階段 -->
-          <div class="bg-white rounded-xl shadow-sm p-6">
-            <h2 class="text-base font-semibold text-green-600 mb-4 border-b pb-2">✅ 覆測階段</h2>
+          <!-- 測試階段 -->
+          <div class="bg-white rounded-xl shadow-sm p-6 mb-4">
+            <h2 class="text-base font-semibold text-green-600 mb-4 border-b pb-2">✅ 測試階段</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+              <div><div class="label">測試人員</div><div>{{ issue.tester || '—' }}</div></div>
               <div><div class="label">測試日期</div><div>{{ issue.testDate || '—' }}</div></div>
               <div><div class="label">測試結果</div>
                 <span v-if="issue.testResult" :class="['px-2 py-0.5 rounded text-xs font-medium', issue.testResult === 'OK' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700']">{{ issue.testResult }}</span>
                 <span v-else>—</span>
               </div>
+            </div>
+          </div>
+
+          <!-- 業務單位覆測階段 -->
+          <div class="bg-white rounded-xl shadow-sm p-6">
+            <h2 class="text-base font-semibold text-purple-600 mb-4 border-b pb-2">📋 業務單位覆測階段</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
               <div><div class="label">業務單位覆測人員</div><div>{{ issue.reviewer || '—' }}</div></div>
               <div><div class="label">覆測日期</div><div>{{ issue.reviewDate || '—' }}</div></div>
               <div><div class="label">覆測結果</div>
