@@ -5,8 +5,8 @@
 
 // ── 1. 設定（請填入您的值）───────────────────────────────────
 const CONFIG = {
-  GAS_URL:          'YOUR_APPS_SCRIPT_WEB_APP_URL',  // Apps Script Web App URL
-  GOOGLE_CLIENT_ID: 'YOUR_GOOGLE_CLIENT_ID'           // Google OAuth 2.0 用戶端 ID
+  GAS_URL:          'https://script.google.com/macros/s/AKfycbz6umovm7oZKGQ2gOmFSFpolQV9vbBhGJE1d8Rnox9x_2dgYQphwPcTSF1vGNwiZ7kS/exec',
+  GOOGLE_CLIENT_ID: '1032610689790-977idfq4tsh9v72dvr0t3elctpj6cvsj.apps.googleusercontent.com'
 };
 
 // ── 2. 全域狀態 ───────────────────────────────────────────────
