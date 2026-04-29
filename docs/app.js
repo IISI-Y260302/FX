@@ -609,7 +609,8 @@ const IssueFormView = {
         return;
       }
       try {
-        const res = await api.listIssues({ keyword: router.params.id });
+        // 取得全部列表再用編號比對（keyword 只搜尋描述欄位，不能搜尋編號）
+        const res = await api.listIssues({});
         const issue = res.data.find(i => i.number === router.params.id);
         if (issue) {
           Object.assign(form, {
@@ -622,6 +623,8 @@ const IssueFormView = {
           if (issue.attachment) {
             try { attachments.value = JSON.parse(issue.attachment); } catch (_) { attachments.value = []; }
           }
+        } else {
+          showToast('找不到問題單：' + router.params.id, 'error');
         }
       } catch (e) { showToast(e.message, 'error'); }
     }
