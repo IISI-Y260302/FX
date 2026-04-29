@@ -180,7 +180,9 @@ function restoreSession() {
   const u = sessionStorage.getItem('cbc_user');
   if (t && u) {
     try {
-      const payload = JSON.parse(atob(t.split('.')[1]));
+      const base64 = t.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      const binary = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+      const payload = JSON.parse(new TextDecoder('utf-8').decode(binary));
       if (payload.exp && payload.exp * 1000 > Date.now()) {
         store.token = t;
         store.user  = JSON.parse(u);
