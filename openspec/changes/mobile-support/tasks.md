@@ -38,6 +38,6 @@
 
 ## 7. 測試與部署
 
-- [ ] 7.1 使用瀏覽器 DevTools 模擬 iPhone SE（375px）、iPhone 14（390px）、iPad（768px）驗證各頁面版面
-- [ ] 7.2 實機測試：Android 或 iOS 手機確認漢堡選單、卡片列表、表單輸入正常
+- [x] 7.1 使用瀏覽器 DevTools 模擬 iPhone SE（375px）、iPhone 14（390px）、iPad（768px）驗證各頁面版面
+- [x] 7.2 實機測試：Android 或 iOS 手機確認漢堡選單、卡片列表、表單輸入正常
 - [x] 7.3 更新 `index.html` 版本號（`app.js?v=N`），git push 部署至 GitHub Pages
