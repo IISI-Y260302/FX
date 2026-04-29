@@ -449,7 +449,7 @@ const IssueFormView = {
               </div>
               <div>
                 <label class="label">測試功能項目</label>
-                <input v-model="form.feature" :readonly="!canEditReporter" :class="['input', !canEditReporter && 'bg-gray-50']" placeholder="自動填入或手動輸入" />
+                <input v-model="form.feature" readonly class="input bg-gray-50 text-gray-500" placeholder="由測試案例編號自動填入" />
               </div>
               <div class="md:col-span-2">
                 <label class="label">問題描述 <span class="text-red-500">*</span></label>
