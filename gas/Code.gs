@@ -320,6 +320,11 @@ function updateIssue(body, auth) {
   return { success: true };
 }
 
+function setCell(sheet, rowIdx, colIdx, value) {
+  if (value === undefined) return;
+  sheet.getRange(rowIdx, colIdx).setValue(value === null ? '' : value);
+}
+
 // ─────────────────────────────────────────────────────────────
 // 軟刪除 (action=delete)
 // ─────────────────────────────────────────────────────────────
