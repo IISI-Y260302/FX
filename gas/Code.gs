@@ -303,7 +303,7 @@ function updateIssue(body, auth) {
     setCell(sheet, rowIdx, COL.ATTACHMENT, body.attachment);
   }
 
-  // 處理/覆測階段欄位（所有人皆可填寫）
+  // 處理/覆測/狀態欄位（所有人皆可填寫）
   setCell(sheet, rowIdx, COL.HANDLER,       body.handler);
   setCell(sheet, rowIdx, COL.SOLUTION,      body.solution);
   setCell(sheet, rowIdx, COL.TYPE,          body.type);
@@ -314,37 +314,10 @@ function updateIssue(body, auth) {
   setCell(sheet, rowIdx, COL.REVIEWER,      body.reviewer);
   setCell(sheet, rowIdx, COL.REVIEW_DATE,   body.reviewDate);
   setCell(sheet, rowIdx, COL.REVIEW_RESULT, body.reviewResult);
+  setCell(sheet, rowIdx, COL.STATUS,        body.status);
   setCell(sheet, rowIdx, COL.REMARK,        body.remark);
 
-  autoUpdateStatus(sheet, rowIdx);
   return { success: true };
-}
-
-function setCell(sheet, rowIdx, colIdx, value) {
-  if (value === undefined) return;
-  sheet.getRange(rowIdx, colIdx).setValue(value === null ? '' : value);
-}
-
-function autoUpdateStatus(sheet, rowIdx) {
-  const row = sheet.getRange(rowIdx, 1, 1, 20).getValues()[0];
-  const current      = row[COL.STATUS       - 1].toString();
-  const solution     = row[COL.SOLUTION     - 1].toString();
-  const resolveDate  = row[COL.RESOLVE_DATE - 1].toString();
-  const testResult   = row[COL.TEST_RESULT  - 1].toString();
-  const reviewResult = row[COL.REVIEW_RESULT - 1].toString();
-
-  if (current === '已刪除') return;
-
-  let newStatus = current;
-  if (testResult === 'NG' || reviewResult === 'NG') {
-    newStatus = 'Reopen';
-  } else if (solution && resolveDate) {
-    newStatus = 'Closed';
-  }
-
-  if (newStatus !== current) {
-    sheet.getRange(rowIdx, COL.STATUS).setValue(newStatus);
-  }
 }
 
 // ─────────────────────────────────────────────────────────────

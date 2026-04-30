@@ -637,6 +637,14 @@ const IssueFormView = {
                   <option v-for="r in resultOpts" :key="r">{{ r }}</option>
                 </select>
               </div>
+              <div>
+                <label class="label">問題狀態</label>
+                <select v-model="form.status" class="input">
+                  <option value="Open">Open</option>
+                  <option value="Closed">Closed</option>
+                  <option value="Reopen">Reopen</option>
+                </select>
+              </div>
             </div>
           </div>
 
@@ -663,7 +671,7 @@ const IssueFormView = {
       number: '', date: '', testCase: '', feature: '', desc: '',
       severity: '', remark: '', handler: '', type: '', solution: '',
       resolveDate: '', tester: '', testDate: '', testResult: '',
-      reviewer: '', reviewDate: '', reviewResult: ''
+      reviewer: '', reviewDate: '', reviewResult: '', status: 'Open'
     });
 
     const canEditReporter = computed(() => {
