@@ -441,7 +441,7 @@ const IssueListView = {
   setup() {
     const issues  = ref([]);
     const loading = ref(false);
-    const filters = reactive({ status: '', severity: '', reporter: '', keyword: '', showDeleted: false });
+    const filters = reactive({ status: 'Open', severity: '', reporter: '', keyword: '', showDeleted: false });
 
     const isAdmin      = computed(() => store.user?.role === 'admin');
     const statusOpts   = computed(() => store.options?.status   || []);
@@ -467,7 +467,7 @@ const IssueListView = {
     }
 
     function resetFilters() {
-      Object.assign(filters, { status: '', severity: '', reporter: '', keyword: '', showDeleted: false });
+      Object.assign(filters, { status: 'Open', severity: '', reporter: '', keyword: '', showDeleted: false });
       load();
     }
 
@@ -637,6 +637,13 @@ const IssueFormView = {
                   <option v-for="r in resultOpts" :key="r">{{ r }}</option>
                 </select>
               </div>
+            </div>
+          </div>
+
+          <!-- 案件狀態 -->
+          <div class="bg-white rounded-xl shadow-sm p-6">
+            <h2 class="text-base font-semibold text-gray-700 mb-4 border-b pb-2">📌 案件狀態</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label class="label">問題狀態</label>
                 <select v-model="form.status" class="input">
